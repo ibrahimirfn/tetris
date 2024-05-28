@@ -49,6 +49,8 @@ paused = False
 in_difficulty_menu = False  # Add a variable to track if we're in the difficulty menu
 loading = False  # Add a variable to track if we're in the loading screen
 loading_start_time = 0  # Add a variable to track the start time of the loading screen
+in_controls_menu = False  # Add a variable to track if we're in the controls menu
+in_high_scores_menu = False  # Add a variable to track if we're in the high scores menu
 
 while True:
     for event in pygame.event.get():
@@ -101,16 +103,20 @@ while True:
                             current_option = (current_option - 1) % len(difficulty_option)
                         if event.key == pygame.K_DOWN:
                             current_option = (current_option + 1) % len(difficulty_option)
+                    elif in_controls_menu or in_high_scores_menu:
+                        if event.key == pygame.K_RETURN or event.key == pygame.K_ESCAPE:
+                            in_controls_menu = False
+                            in_high_scores_menu = False
+                            current_option = 0  # Reset current_option
                     else:
                         if event.key == pygame.K_RETURN:
                             if menu_option[current_option] == "Play":
                                 in_difficulty_menu = True
                                 current_option = 0  # Reset current_option
                             elif menu_option[current_option] == "High Scores":
-                                high_score = highscore.load_high_score()
-                                print("High Score:", high_score)  # Ganti dengan kode yang menampilkan high scores
+                                in_high_scores_menu = True
                             elif menu_option[current_option] == "Controls":
-                                print("Controls: Arrow keys to move, Up arrow to rotate, Esc to pause") 
+                                in_controls_menu = True
                             elif menu_option[current_option] == "Quit":
                                 pygame.quit()
                                 sys.exit()
@@ -152,6 +158,47 @@ while True:
                     color = Colors.red
                 surface = difficulty_font.render(option, True, color)
                 screen.blit(surface, (180, 180 + i * 50))
+        elif in_controls_menu:
+            # Controls menu background
+            controls_background = pygame.Surface((300, 400))
+            controls_background.fill(Colors.light_blue)
+            controls_background.set_alpha(200)
+            screen.blit(controls_background, (100, 100))
+
+            controls_font = pygame.font.Font(None, 30)
+            controls_text = [
+                "Controls:",
+                "Arrow keys to move",
+                "Up arrow to rotate",
+                "Esc to pause",
+                "",
+                "Press Enter to go back"
+            ]
+            for i, text in enumerate(controls_text):
+                surface = controls_font.render(text, True, Colors.white)
+                screen.blit(surface, (120, 120 + i * 40))
+        elif in_high_scores_menu:
+            # High Scores menu background
+            high_scores_background = pygame.Surface((300, 400))
+            high_scores_background.fill(Colors.light_blue)
+            high_scores_background.set_alpha(200)
+            screen.blit(high_scores_background, (100, 100))
+
+            high_scores_font = pygame.font.Font(None, 30)
+            high_scores_text = ["High Scores:"]
+
+            # Load high scores
+            high_scores = highscore.load_high_scores()  # Assuming this function returns a list of high scores
+            for i, score in enumerate(high_scores):
+                high_scores_text.append(f"{score}")  # Remove the numbering here
+
+
+            high_scores_text.append("")
+            high_scores_text.append("Press Enter to go back")
+
+            for i, text in enumerate(high_scores_text):
+                surface = high_scores_font.render(text, True, Colors.white)
+                screen.blit(surface, (120, 120 + i * 40))
         else:
             # Menu background
             menu_background = pygame.Surface((200, 300))
@@ -189,9 +236,9 @@ while True:
         else:
             if game.score > highscore.load_high_score():
                 highscore.save_high_score(game.score)
-            game_over_background = pygame.Surface((300, 300))
+            game_over_background = pygame.Surface((300, 160))
             game_over_background.fill(Colors.dark_red)
-            game_over_background.set_alpha(200)
+            game_over_background.set_alpha(100)
             screen.blit(game_over_background, (100, 200))
 
             game_over_font = pygame.font.Font(None, 40)
