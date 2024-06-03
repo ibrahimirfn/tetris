@@ -83,9 +83,9 @@ while True:
                         elif game_over_option[current_option] == "Quit":
                             pygame.quit()
                             sys.exit()
-                    if event.key == pygame.K_UP:
+                    elif event.key == pygame.K_UP:
                         current_option = (current_option - 1) % len(game_over_option)
-                    if event.key == pygame.K_DOWN:
+                    elif event.key == pygame.K_DOWN:
                         current_option = (current_option + 1) % len(game_over_option)
                 else:
                     if in_difficulty_menu:
@@ -95,9 +95,9 @@ while True:
                             loading_start_time = pygame.time.get_ticks()
                             current_option = 0
                             in_difficulty_menu = False
-                        if event.key == pygame.K_UP:
+                        elif event.key == pygame.K_UP:
                             current_option = (current_option - 1) % len(difficulty_option)
-                        if event.key == pygame.K_DOWN:
+                        elif event.key == pygame.K_DOWN:
                             current_option = (current_option + 1) % len(difficulty_option)
                     elif in_controls_menu or in_high_scores_menu:
                         if event.key == pygame.K_RETURN or event.key == pygame.K_ESCAPE:
@@ -248,7 +248,6 @@ while True:
                 surface = game_over_font.render(option, True, color)
                 screen.blit(surface, (150, 380 + i * 50))
 
-    # Display pause screen if paused
     if paused:
         pause_surface = title_font.render("Paused", True, Colors.white)
         screen.blit(pause_surface, (200, 270))

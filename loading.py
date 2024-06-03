@@ -13,10 +13,8 @@ def show_loading_screen(screen, progress):
     loading_text = loading_font.render("Loading...", True, Colors.white)
     screen.blit(loading_text, (165, 270))
     
-    # Draw the loading bar background
     bar_background = pygame.Rect(150, 350, 200, 30)
     pygame.draw.rect(screen, Colors.light_blue, bar_background)
 
-    # Draw the progress bar
     bar_progress = pygame.Rect(150, 350, 200 * progress, 30)
     pygame.draw.rect(screen, Colors.green, bar_progress)
